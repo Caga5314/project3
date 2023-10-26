@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="registratie.css">
 </head>
 <body>
+ <a href="main.html">Home</a>   
 <h2>Registratie Formulier</h2>
 <form method="post" action="registratie_verwerken.php">
     <label for="naam">Naam:</label>
