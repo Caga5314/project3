@@ -1,0 +1,217 @@
+<?php
+$gebruikersnaam = "";
+$email = "";
+$telefoonnummer = "";
+$wachtwoord = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Verwerk de formuliergegevens
+    $gebruikersnaam = $_POST['gebruikersnaam'];
+    $email = $_POST['email'];
+    $telefoonnummer = $_POST['telefoonnummer'];
+    $wachtwoord = $_POST['wachtwoord'];
+
+    // Verdere validatie en beveiliging hier toevoegen
+
+    // Hier begint de code om gegevens naar de database te schrijven
+    try {
+        $pdo = new PDO('mysql:host=localhost;dbname=donkeytravel', 'root', '');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // SQL-query om gegevens in de database in te voegen
+        $query = "INSERT INTO registratie (gebruikersnaam, email, telefoonnummer, wachtwoord) VALUES (:gebruikersnaam, :email, :telefoonnummer, :wachtwoord)";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':gebruikersnaam', $gebruikersnaam);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':telefoonnummer', $telefoonnummer);
+        $stmt->bindParam(':wachtwoord', $wachtwoord);
+
+        if ($stmt->execute()) {
+            echo "Gegevens succesvol toegevoegd aan de database!";
+        } else {
+            echo "Fout bij het toevoegen van gegevens aan de database: " . implode(":", $stmt->errorInfo());
+        }
+    } catch (PDOException $e) {
+        echo "Verbinding mislukt: " . $e->getMessage();
+    }
+}
+?>
+
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registratie</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+    <div class="container">
+        <h1>Registratieformulier</h1>
+        <form action="" method="post">
+            <label for="gebruikersnaam">Gebruikersnaam:</label>
+            <input type="text" id="gebruikersnaam" name="gebruikersnaam" required>
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="telefoonnummer">Telefoonnummer:</label>
+            <input type="tel" id="telefoonnummer" name="telefoonnummer" pattern="[0-9]{10}" required>
+            <label for="wachtwoord">Wachtwoord:</label>
+            <input type="password" id="wachtwoord" name="wachtwoord" required>
+
+            <button type="submit">Registreren</button>
+        </form>
+    </div>
+    </body>
+    </html>
+
+registratie
+
+
+<?php
+$db_host = "localhost";
+$db_user = "root";
+$db_password = "";
+$db_name = "donkeytravel";
+
+$conn = mysqli_connect($db_host, $db_user, $db_password, $db_name);
+
+if (!$conn) {
+    die("Verbindingsfout: " . mysqli_connect_error());
+}
+
+session_start();
+
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Dit is een eenvoudig voorbeeld en in de praktijk moet je hier een database query gebruiken
+    // met gehashte wachtwoorden.
+    $correctUsername = 'user';
+    $correctPassword = 'password';
+
+    if ($username === $correctUsername && $password === $correctPassword) {
+        $_SESSION['user'] = $username;
+        header('Location: welkom.php');
+        exit;
+    } else {
+        $message = 'Onjuiste gebruikersnaam of wachtwoord!';
+    }
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Login</title>
+</head>
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <?php if ($message !== ''): ?>
+        <p class="error"><?= $message ?></p>
+    <?php endif; ?>
+    <form action="login.php" method="post">
+        <label for="username">Gebruikersnaam:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Wachtwoord:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Inloggen</button>
+    </form>
+</div>
+</body>
+</html>
+
+
+login
+
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #555;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+h1, h2 {
+    background-color: #555;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding: 0;
+}
+
+form {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: darkslategray;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+footer {
+    background-color: #555555;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
